@@ -2,7 +2,9 @@ package client
 
 import (
 	"context"
+	"crypto/tls"
 	"fmt"
+	"net/http"
 
 	"github.com/docker/distribution/reference"
 	"github.com/moby/buildkit/util/push"
@@ -34,5 +36,10 @@ func (c *Client) Push(ctx context.Context, image string, insecure bool) error {
 	if err != nil {
 		return err
 	}
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+	http.DefaultClient = &http.Client{Transport: tr}
+
 	return push.Push(ctx, sm, opt.ContentStore, imgObj.Target.Digest, image, insecure, opt.RegistryHosts, false)
 }

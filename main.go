@@ -1,7 +1,9 @@
 package main
 
 import (
+	"crypto/tls"
 	"fmt"
+	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
@@ -134,6 +136,11 @@ func main() {
 
 		return nil
 	}
+
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+	http.DefaultClient = &http.Client{Transport: tr}
 
 	// Run our program.
 	if err := cmd.Execute(); err != nil {

@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	"github.com/spf13/cobra"
 	"io"
 	"io/ioutil"
 	"os"
@@ -18,6 +17,7 @@ import (
 	"github.com/docker/docker/registry"
 	registryapi "github.com/genuinetools/reg/registry"
 	"github.com/sirupsen/logrus"
+	"github.com/spf13/cobra"
 )
 
 const loginUsageShortHelp = `Log in to a Docker registry.`
@@ -104,7 +104,7 @@ func (cmd *loginCommand) Run(args []string) error {
 	}
 
 	// Attempt to login to the registry.
-	r, err := registryapi.New(cliconfigtypes2dockerapitypes(authConfig), registryapi.Opt{Debug: debug})
+	r, err := registryapi.New(cliconfigtypes2dockerapitypes(authConfig), registryapi.Opt{Debug: debug, Insecure: true})
 	if err != nil {
 		return fmt.Errorf("creating registry client failed: %v", err)
 	}
